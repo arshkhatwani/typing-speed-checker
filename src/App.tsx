@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Content from "./components/Content";
-import { contentCapture, contentStr } from "./state/contentState";
+import {
+    contentCapture,
+    contentStr,
+    decrementState,
+    timerState,
+} from "./state/contentState";
 import initialTimer from "./constants/initialTimer";
 
 function App() {
     const [content, setContent] = useRecoilState(contentStr);
     const [captured, setCaptured] = useRecoilState(contentCapture);
 
-    const [count, setCount] = useState(initialTimer);
-    const [decrementStarted, setDecrementStarted] = useState(false);
+    const [count, setCount] = useRecoilState(timerState);
+    const [decrementStarted, setDecrementStarted] =
+        useRecoilState(decrementState);
     const [intervalState, setIntervalState] = useState<number>();
 
     useEffect(() => {
