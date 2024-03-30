@@ -17,8 +17,13 @@ function useKeyboardWithTimer() {
     const [intervalState, setIntervalState] = useState<number>();
 
     useEffect(() => {
-        if (timer == 0) {
+        if (timer <= 0) {
             clearInterval(intervalState);
+        }
+
+        // Fixing timer decrement issue after hot-reload during development
+        if (timer < 0) {
+            setTimer(0);
         }
     }, [timer]);
 
