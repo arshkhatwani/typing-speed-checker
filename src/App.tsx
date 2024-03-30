@@ -1,24 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Content from "./components/Content";
 import { contentCapture, contentStr } from "./state/contentState";
+import initialTimer from "./constants/initialTimer";
 
 function App() {
     const [content, setContent] = useRecoilState(contentStr);
     const [captured, setCaptured] = useRecoilState(contentCapture);
 
+    const [count, setCount] = useState(initialTimer);
+    const [decrementStarted, setDecrementStarted] = useState(false);
+    const [intervalState, setIntervalState] = useState<number>();
+
+    useEffect(() => {
+        if (count == 0) {
+            clearInterval(intervalState);
+        }
+    }, [count]);
+
+    useEffect(() => {
+        if (decrementStarted) {
+            const interval = setInterval(() => {
+                setCount((prevCount) => prevCount - 1);
+            }, 1000);
+            setIntervalState(interval);
+
+            return () => clearInterval(interval);
+        }
+    }, [decrementStarted]);
+
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
-            if (
-                /^[a-z]$/.test(event.key) ||
-                /^[A-Z]$/.test(event.key) ||
-                event.key === " "
-            ) {
-                // console.log(event.key);
-                if (content.length && content[0] == event.key) {
-                    setContent(content.slice(1));
-                    setCaptured(captured + event.key);
-                }
+            if (!decrementStarted) {
+                setDecrementStarted(true);
             }
         };
 
@@ -27,7 +41,24 @@ function App() {
         return () => {
             document.removeEventListener("keydown", handleKeyPress);
         };
-    }, [content, captured]);
+    }, [decrementStarted]);
+
+    useEffect(() => {
+        if (!count) return;
+
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (content.length && content[0] == event.key) {
+                setContent(content.slice(1));
+                setCaptured(captured + event.key);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyPress);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [content, captured, count]);
 
     return (
         <div className="p-5">
@@ -35,7 +66,19 @@ function App() {
                 Know Your Typing Speed!
             </h1>
 
+            {decrementStarted ? <h2>{count}</h2> : <></>}
+
             <Content />
+
+            {count === 0 ? (
+                <h3>
+                    Your typing speed is{" "}
+                    {(captured.split(" ").length * 60) / initialTimer} words per
+                    minute
+                </h3>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }
