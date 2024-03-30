@@ -1,5 +1,6 @@
 import Content from "./components/Content";
 import Timer from "./components/Timer";
+import Title from "./components/Title";
 import TypingSpeed from "./components/TypingSpeed";
 import useKeyboardWithTimer from "./hooks/useKeyboardWithTimer";
 
@@ -8,9 +9,7 @@ function App() {
 
     return (
         <div className="p-5">
-            <h1 className="text-3xl font-bold underline">
-                Know Your Typing Speed!
-            </h1>
+            <Title />
 
             <Timer />
 
