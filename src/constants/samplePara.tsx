@@ -1,4 +1,4 @@
 const samplePara =
-    "Programming is the art of telling a computer what to do through a set of instructions. It requires creativity, logic, and problem-solving skills. With each line of code, a programmer brings ideas to life and creates solutions to real-world problems.";
+    "between while take fact first problem consider set out stand back early of people new day the get by possible not good this number against of";
 
 export default samplePara;
